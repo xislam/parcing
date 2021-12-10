@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Номер парковки</th>
+            <th scope="col">Дата начала</th>
+            <th scope="col">Дата конца</th>
+            <th scope="col">За резервировать</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in parking %}
+            <tr>
+                <td>
+                    {% if user.role == 'Manager' %}
+                    <a href="{% url 'update' pk=p.pk %}">{{ p.parking_number }}</a>
+                    {% else %}
+                    {{ p.parking_number }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.role == 'Manager' %}
+                    <a href="{% url 'update' pk=p.pk %}">{{ p.start_date }}</a>
+                    {% else %}
+                    {{ p.start_date }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.role == 'Manager' %}
+                    <a href="{% url 'update' pk=p.pk %}">{{ p.end_date }}</a>
+                    {% else %}
+                    {{ p.end_date }}
+                    {% endif %}
+                </td>
+                <td>
+                    <form  method="POST" action="{% url "create_p"  p.pk%}">
+                     {% csrf_token %}
+                    {% if p.for_reserved == None %}
+                        <button type="submit" class="btn btn-primary">
+                                            <i class="ti-save-alt"></i> За резервировать
+                                        </button>
+                    {% else %}
+                    {{ p.for_reserved }}
+                    {% endif %}
+                </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
