@@ -16,16 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from parking.views import login_view, logout_view, ParkingList, ParkingUpdateView, ParkingCreateView, SignUpView, \
-    ForReservedUpdateView
+from parking import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/login/', login_view, name='login'),
-    path('accounts/logout/', logout_view, name='logout'),
-    path('signup/', SignUpView.as_view(), name='signup'),
-    path('', ParkingList.as_view(), name='index'),
-    path('update/<int:pk>/', ParkingUpdateView.as_view(), name='update'),
-    path('create', ParkingCreateView.as_view(), name='create'),
-    path('parking/<int:pk>/', ForReservedUpdateView.as_view(), name='create_p'),
+    path('accounts/login/', views.login_view, name='login'),
+    path('accounts/logout/', views.logout_view, name='logout'),
+    path('signup/', views.SignUpView.as_view(), name='signup'),
+    path('', views.ParkingList.as_view(), name='index'),
+    path('update/<int:pk>/', views.ParkingUpdateView.as_view(), name='update'),
+    path('create', views.ParkingCreateView.as_view(), name='create'),
+    path('reserve/<int:pk>/', views.ReserveParkingView.as_view(), name='park_reserve')
 ]

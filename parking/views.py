@@ -2,9 +2,10 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views import View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from parking.forms import ParkingForm, MyUserCreationForm
 from parking.models import Parking
@@ -31,7 +32,6 @@ def logout_view(request):
 
 
 class ParkingList(LoginRequiredMixin, ListView):
-    login_url = '/accounts/login/'
     paginate_by = 50
     template_name = 'index.html'
     context_object_name = 'parking'
@@ -39,7 +39,6 @@ class ParkingList(LoginRequiredMixin, ListView):
 
 
 class ParkingCreateView(LoginRequiredMixin, CreateView):
-    login_url = '/accounts/login/'
     template_name = 'create.html'
     model = Parking
     form_class = ParkingForm
@@ -50,7 +49,6 @@ class ParkingCreateView(LoginRequiredMixin, CreateView):
 
 
 class ParkingUpdateView(LoginRequiredMixin, UpdateView):
-    login_url = '/accounts/login/'
     model = Parking
     template_name = 'update.html'
     form_class = ParkingForm
@@ -62,7 +60,6 @@ class ParkingUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class ParkingDeleteView(LoginRequiredMixin, DeleteView):
-    login_url = '/accounts/login/'
     model = Parking
 
     def get(self, request, *args, **kwargs):
@@ -73,21 +70,15 @@ class ParkingDeleteView(LoginRequiredMixin, DeleteView):
         return reverse('index')
 
 
-class ForReservedUpdateView(LoginRequiredMixin, UpdateView):
-    login_url = '/accounts/login/'
+class ReserveParkingView(LoginRequiredMixin, View):
     model = Parking
-    template_name = 'index.html'
-    form_class = ParkingForm
 
-    def form_valid(self, form):
-        """If the form is valid, save the associated model."""
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('index')
+    def get(self, request, pk, *args, **kwargs):
+        obj = get_object_or_404(Parking, id=pk)
+        obj.user = request.user
+        obj.save()
+        messages.add_message(request, messages.INFO, 'Your reservation successfully completed.')
+        return redirect('index')
 
 
 class SignUpView(CreateView):
