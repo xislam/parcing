@@ -33,6 +33,9 @@
                                                     {% endfor %}
                                                     <p>{{ form.parking_number }}</p>
                                                 </div>
+                                            <div class="form-control-feedback">
+                                                    <small>Пожалуста выберите <code>номер</code></small>
+                                                </div>
                                             </div>
 
                                         <div class="form-group">
@@ -43,6 +46,9 @@
                                                         <p class="form-error text-danger">{{ error }}</p>
                                                     {% endfor %}
                                                     <p>{{ form.start_date }}</p>
+                                                </div>
+                                        <div class="form-control-feedback">
+                                                    <small>Пожалусто заполните в формате %d.%m.%Y<code></code></small>
                                                 </div>
                                             </div>
 
@@ -55,6 +61,10 @@
                                                     {% endfor %}
                                                     <p>{{ form.end_date }}</p>
                                                 </div>
+                                        <div class="form-control-feedback">
+                                                    <small>Пожалусто заполните в формате %H:%M<code></code></small>
+                                                </div>
+                                            </div>
                                             </div>
 
 
