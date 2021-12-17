@@ -67,4 +67,7 @@ Delivery of work:
         python manage.py runserver 
 
 
-    
+URL 
+
+можете посмотреть в файле urls.py он в Test_parking
+
